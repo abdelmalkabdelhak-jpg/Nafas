@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نفس - تطبيق الراحة النفسية واليوغا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5d8aa8;
+            --secondary: #f0e68c;
+            --light: #f5f5f5;
+            --dark: #2f4f4f;
+            --accent: #b3e5fc;
+            --success: #4caf50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .screen {
+            display: none;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option-btn {
+            background-color: white;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary);
+            text-align: right;
+        }
+        
+        .option-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--dark);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .tip-card, .pose-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tip-card h3, .pose-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .pose-steps {
+            margin-top: 15px;
+            padding-right: 20px;
+        }
+        
+        .pose-steps li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .step-indicator {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .completion-message h2 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+        
+        .completion-message p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .restart-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .restart-btn:hover {
+            background-color: var(--dark);
+            transform: translateY(-2px);
+        }
+        
+        .pose-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .pose-image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .pose-image {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary);
+        }
+        
+        .pose-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+        
+        .pose-image-placeholder {
+            text-align: center;
+            color: var(--dark);
+            padding: 20px;
+        }
+        
+        .pose-image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--primary);
+        }
+        
+        .timer-section {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--accent);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .timer-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin: 15px 0;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .timer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 120px;
+        }
+        
+        .timer-btn:hover {
+            background-color: var(--dark);
+        }
+        
+        .timer-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .pose-counter {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+        
+        .sound-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .sound-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sound-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--accent), #e1f5fe);
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .pose-instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(179, 229, 252, 0.2);
+            border-radius: 10px;
+            border-right: 3px solid var(--primary);
+        }
+        
+        .pose-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .benefits-list {
+            margin-top: 15px;
+            padding-right: 15px;
+        }
+        
+        .benefits-list li {
+            margin-bottom: 8px;
+            color: var(--dark);
+            position: relative;
+            padding-right: 20px;
+        }
+        
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .screen {
+                padding: 20px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+            
+            .timer-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .timer-btn {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .pose-image {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>نفس - تطبيق الراحة النفسية</h1>
+            <p>تطبيق مجاني بالكامل للعناية بصحتك النفسية</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- شاشة البداية -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-message">
+                <h2>مرحباً بك في تطبيق "نفس"</h2>
+                <p>تطبيق متكامل للراحة النفسية وتمارين اليوغا المخصصة حسب حالتك المزاجية</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="nav-btn" id="start-btn" style="font-size: 1.2rem; padding: 15px 30px;">
+                    ابدأ رحلتك نحو الراحة النفسية
+                </button>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--primary);">مميزات التطبيق</h3>
+                <div class="tip-card">
+                    <h3><i class="fas fa-heart" style="color: var(--primary); margin-left: 10px;"></i>تقييم الحالة النفسية</h3>
+                    <p>اختبار بسيط لتحديد حالتك النفسية الحالية واحتياجاتك</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-lightbulb" style="color: var(--primary); margin-left: 10px;"></i>نصائح مخصصة</h3>
+                    <p>احصل على نصائح عملية تناسب حالتك النفسية</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-spa" style="color: var(--primary); margin-left: 10px;"></i>تمارين يوغا متكاملة</h3>
+                    <p>تمارين يوغا مصممة خصيصاً لحالتك مع عد تنازلي تفاعلي</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- شاشة الاستبيان -->
+        <div id="question-screen" class="screen">
+            <div class="step-indicator">الخطوة <span id="current-step">1</span> من <span id="total-steps">5</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="question" id="question-text">كيف تشعر اليوم؟</div>
+            <div class="options" id="options-container">
+                <!-- سيتم ملؤها بالجافاسكريبت -->
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-btn" disabled>السابق</button>
+                <button class="nav-btn" id="next-btn" disabled>التالي</button>
+            </div>
+        </div>
+        
+        <!-- شاشة النصائح -->
+        <div id="tips-screen" class="screen">
+            <h2 class="question">نصائح للراحة النفسية</h2>
+            
+            <div id="tips-container">
+                <!-- سيتم ملؤها بالجافاسكريبت -->
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="back-to-questions">العودة</button>
+                <button class="nav-btn" id="to-yoga-btn">الانتقال لتمارين اليوغا</button>
+            </div>
+        </div>
+        
+        <!-- شاشة اليوغا -->
+        <div id="yoga-screen" class="screen">
+            <h2 class="question">تمارين يوغا مناسبة لك</h2>
+            <div class="pose-counter">التمرين <span id="current-pose">1</span> من <span id="total-poses">3</span></div>
+            
+            <div class="pose-info-container">
+                <div class="pose-image-section">
+                    <div class="pose-image" id="pose-image">
+                        <div class="pose-image-placeholder">
+                            <i class="fas fa-spa" id="pose-icon"></i>
+                            <div id="pose-image-text">صورة التمرين</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pose-card">
+                        <h3 id="pose-name">اسم التمرين</h3>
+                        <p id="pose-description">وصف التمرين</p>
+                        
+                        <div class="pose-instructions">
+                            <h4 style="color: var(--primary); margin-bottom: 10px;">كيفية القيام بالتمرين:</h4>
+                            <ol class="pose-steps" id="pose-steps">
+                                <!-- سيتم إضافة الخطوات هنا -->
+                            </ol>
+                            
+                            <div style="margin-top: 15px;">
+                                <h4 style="color: var(--primary); margin-bottom: 10px;">فوائد التمرين:</h4>
+                                <ul class="benefits-list" id="pose-benefits">
+                                    <!-- سيتم إضافة الفوائد هنا -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timer-section">
+                    <h3>العد التنازلي للتمرين</h3>
+                    <div class="timer-display" id="timer-display">00:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="start-timer-btn">بدء العد</button>
+                        <button class="timer-btn" id="pause-timer-btn" disabled>إيقاف مؤقت</button>
+                        <button class="timer-btn" id="reset-timer-btn">إعادة التعيين</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sound-control">
+                <span>الصوت الهادئ:</span>
+                <button class="sound-btn" id="sound-toggle">تشغيل</button>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-pose-btn">التمرين السابق</button>
+                <button class="nav-btn" id="next-pose-btn">التمرين التالي</button>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="back-to-tips">العودة للنصائح</button>
+                <button class="nav-btn" id="finish-btn">إنهاء الجلسة</button>
+            </div>
+        </div>
+        
+        <!-- شاشة الإكمال -->
+        <div id="completion-screen" class="screen">
+            <div class="completion-message">
+                <h2>أحسنت! لقد أكملت جلسة الراحة النفسية</h2>
+                <p>نأمل أن تشعر بتحسن بعد تطبيق هذه النصائح والتمارين. تذكر أن العناية بصحتك النفسية تستحق وقتك واهتمامك.</p>
+                <p>يمكنك العودة لتجربة جديدة في أي وقت.</p>
+                <button class="restart-btn" id="restart-btn">ابدأ جلسة جديدة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- عنصر الصوت -->
+    <audio id="calm-sound" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-forest-treasure-131.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // بيانات الاستبيان
+        const questions = [
+            {
+                text: "كيف تشعر اليوم؟",
+                options: [
+                    { text: "قلق ومتوتر", value: "stress" },
+                    { text: "حزين ومكتئب", value: "sad" },
+                    { text: "مرهق ومستنزف", value: "tired" },
+                    { text: "مشتت التركيز", value: "focus" },
+                    { text: "أشعر بالضجر والملل", value: "bored" }
+                ]
+            },
+            {
+                text: "ما هي شدة هذا الشعور؟",
+                options: [
+                    { text: "خفيف - يمكنني التعامل معه", value: "mild" },
+                    { text: "متوسط - يؤثر على يومي", value: "moderate" },
+                    { text: "شديد - يصعب التعامل معه", value: "severe" }
+                ]
+            },
+            {
+                text: "ما الذي تريده من هذه الجلسة؟",
+                options: [
+                    { text: "الاسترخاء والتخلص من التوتر", value: "relax" },
+                    { text: "زيادة الطاقة والنشاط", value: "energy" },
+                    { text: "تحسين المزاج", value: "mood" },
+                    { text: "زيادة التركيز", value: "concentration" }
+                ]
+            },
+            {
+                text: "كم من الوقت يمكنك تخصيصه للراحة النفسية اليوم؟",
+                options: [
+                    { text: "5-10 دقائق", value: "short" },
+                    { text: "15-20 دقيقة", value: "medium" },
+                    { text: "30 دقيقة أو أكثر", value: "long" }
+                ]
+            },
+            {
+                text: "ما هو مستوى نشاطك البدني المفضل؟",
+                options: [
+                    { text: "تمارين خفيفة وتمدد", value: "light" },
+                    { text: "تمارين متوسطة الشدة", value: "medium" },
+                    { text: "لا أريد تمارين بدنية الآن", value: "none" }
+                ]
+            }
+        ];
+
+        // بيانات النصائح حسب الحالة النفسية
+        const tipsData = {
+            stress: [
+                {
+                    title: "تمرين التنفس العميق",
+                    description: "اجلس في وضع مريح، ضع يدك على بطنك. خذ نفساً عميقاً من الأنف لمدة 4 ثوانٍ، احبس النفس لمدة 7 ثوانٍ، ثم أخرج الزفير ببطء من الفم لمدة 8 ثوانٍ. كرر هذا 5 مرات."
+                },
+                {
+                    title: "تحديد مصدر القلق",
+                    description: "اكتب ثلاثة أشياء تسبب لك القلق. ثم فكر في أي منها يمكنك التحكم به وأي منها خارج عن إرادتك. ركز طاقتك على ما يمكنك تغييره فقط."
+                },
+                {
+                    title: "ممارسة اليقظة الذهنية",
+                    description: "ركز انتباهك على اللحظة الحالية. لاحظ 5 أشياء يمكنك رؤيتها، 4 أشياء يمكنك لمسها، 3 أشياء يمكنك سماعها، شيئين يمكنك شمهما، وشيء واحد يمكنك تذوقه."
+                }
+            ],
+            sad: [
+                {
+                    title: "ممارسة الامتنان",
+                    description: "اكتب ثلاثة أشياء تشعر بالامتنان لها في حياتك. يمكن أن تكون أشياء بسيطة مثل وجود سرير دافئ أو كوب من الشاي. التركيز على الإيجابيات يغير كيمياء الدماغ."
+                },
+                {
+                    title: "الاتصال بالطبيعة",
+                    description: "اذهب للخارج وامشِ في مكان طبيعي لمدة 10 دقائق على الأقل. إذا لم تستطع الخروج، انظر من النافذة وركز على عناصر الطبيعة مثل الأشجار والسماء."
+                },
+                {
+                    title: "الاستماع إلى موسيقى مبهجة",
+                    description: "اصنع قائمة تشغيل لأغنيات تذكرك بأوقات سعيدة أو ترفع معنوياتك. استمع إليها لمدة 15 دقيقة على الأقل."
+                }
+            ],
+            tired: [
+                {
+                    title: "تمارين الطاقة السريعة",
+                    description: "قف وافرد ذراعيك فوق رأسك. انحني ببطء إلى الأمام محاولاً لمس أصابع قدميك. ثم انهض ببطء. كرر هذا 5 مرات لتنشيط الدورة الدموية."
+                },
+                {
+                    title: "ترطيب الجسم",
+                    description: "اشرب كوبين كبيرين من الماء. الجفاف هو أحد الأسباب الشائعة للإرهاق. أضف شريحة من الليمون للنكهة والفوائد الإضافية."
+                },
+                {
+                    title: "أخذ استراحة نشطة",
+                    description: "بدلاً من الجلوس، امشِ في المكان لمدة 3-5 دقائق. الحركة الخفيفة تزيد من تدفق الدم والأكسجين إلى الدماغ والعضلات."
+                }
+            ],
+            focus: [
+                {
+                    title: "تقنية بومودورو",
+                    description: "اضبط مؤقتاً لمدة 25 دقيقة واعمل بتركيز. ثم خذ استراحة لمدة 5 دقائق. بعد 4 جولات، خذ استراحة أطول (15-20 دقيقة)."
+                },
+                {
+                    title: "إزالة المشتتات",
+                    description: "أغلق الإشعارات على هاتفك، وابتعد عن وسائل التواصل الاجتماعي، وخصص مكاناً هادئاً للعمل. استخدم تطبيقات حجب المواقع المشتتة إذا لزم الأمر."
+                },
+                {
+                    title: "تقسيم المهام",
+                    description: "قسّم المهمة الكبيرة إلى مهام صغيرة قابلة للتحقيق. ركز على إكمال مهمة واحدة في كل مرة بدلاً من التفكير في الصورة الكبيرة."
+                }
+            ],
+            bored: [
+                {
+                    title: "تحدي التعلم الجديد",
+                    description: "تعلم شيئاً جديداً لمدة 15 دقيقة. يمكن أن يكون لغة جديدة، مهارة يدوية، أو حتى حقائق مثيرة عن موضوع يهمك."
+                },
+                {
+                    title: "تغيير الروتين",
+                    description: "افعل شيئاً مختلفاً عن روتينك المعتاد. غيّر طريقك للعمل، جرب طبقاً جديداً للغداء، أو اقرأ في مكان مختلف في منزلك."
+                },
+                {
+                    title: "ممارسة الإبداع",
+                    description: "ارسم، اكتب، العب على آلة موسيقية، أو اصنع شيئاً بيديك. لا يهم النتيجة، المهم هو عملية الإبداع نفسها."
+                }
+            ]
+        };
+
+        // قاعدة بيانات موسعة لتمارين اليوغا مع أيقونات مناسبة
+        const yogaPosesDatabase = [
+            // تمارين للتوتر والقلق
+            { 
+                name: "وضعية الطفل", 
+                description: "مهدئة للجهاز العصبي وتخفف التوتر", 
+                mood: "stress", 
+                duration: 60, 
+                icon: "fas fa-child",
+                steps: [
+                    "اجلس على ركبتيك مع جعل أصابع قدميك متجهة للخلف ومتلاصقة",
+                    "افرد جذعك للأمام على فخذيك مع إطالة العمود الفقري",
+                    "اجعل جبهتك تلامس الأرض ومدّ ذراعيك للأمام أو بجانب جسمك",
+                    "تنفس بعمق واحتفظ بالوضعية لمدة 1-3 دقائق",
+                    "استرخِ تماماً وركز على تحرير التوتر من كل جزء من جسمك"
+                ],
+                benefits: [
+                    "تهدئة الجهاز العصبي",
+                    "تخفيف التوتر في الظهر والكتفين",
+                    "تحسين الدورة الدموية في الرأس",
+                    "تخفيف الصداع والتعب"
+                ]
+            },
+            { 
+                name: "وضعية الجثة", 
+                description: "تساعد على الاسترخاء العميق", 
+                mood: "stress", 
+                duration: 180, 
+                icon: "fas fa-bed",
+                steps: [
+                    "استلقي على ظهرك مع مباعدة قدميك قليلاً",
+                    "اجعل ذراعيك بجانب جسمك مع توجيه راحتي اليدين للأعلى",
+                    "أغمض عينيك وتنفس بشكل طبيعي",
+                    "استرخِ تماماً وركز على تحرير التوتر من كل جزء من جسمك",
+                    "ابقَ في هذه الوضعية لمدة 5-10 دقائق"
+                ],
+                benefits: [
+                    "استرخاء كامل للجسم والعقل",
+                    "خفض ضغط الدم ومعدل ضربات القلب",
+                    "تحسين جودة النوم",
+                    "تقليل القلق والتوتر"
+                ]
+            },
+            { 
+                name: "وضعية القطة-البقرة", 
+                description: "تليين العمود الفقري وتخفيف التوتر", 
+                mood: "stress", 
+                duration: 90, 
+                icon: "fas fa-cat",
+                steps: [
+                    "ابدأ على يديك وركبتيك مع جعل يديك تحت كتفيك مباشرة",
+                    "في وضعية البقرة: شهّق وادفع بطنك للأسفل وارفع رأسك وذيلك",
+                    "في وضعية القطة: زفّر وادفع ظهرك للأعلى واخفض رأسك",
+                    "كرر الحركة ببطء مع تزامن التنفس مع الحركة",
+                    "استمر لمدة 1-2 دقيقة مع التركيز على تليين العمود الفقري"
+                ],
+                benefits: [
+                    "تحسين مرونة العمود الفقري",
+                    "تخفيف التوتر في الظهر",
+                    "تحسين وضعية الجسم",
+                    "تنشيط الأعضاء الداخلية"
+                ]
+            },
+            { 
+                name: "وضعية الانحناء الأمامي الجالس", 
+                description: "تهدئة العقل وتخفيف التوتر", 
+                mood: "stress", 
+                duration: 60, 
+                icon: "fas fa-arrows-alt-v",
+                steps: [
+                    "اجلس مع مد ساقيك للأمام",
+                    "انحني للأمام من الوركين وليس الخصر",
+                    "مد ذراعيك نحو قدميك أو امسك كاحليك",
+                    "تنفس بعمق واسترخِ في الوضعية",
+                    "احتفظ بالوضعية لمدة 1-3 دقائق"
+                ],
+                benefits: [
+                    "تهدئة العقل والجهاز العصبي",
+                    "تمديد عضلات الظهر والساقين",
+                    "تحسين الهضم",
+                    "تخفيف التوتر والقلق"
+                ]
+            },
+            { 
+                name: "وضعية الأرجل على الحائط", 
+                description: "استرخاء عميق وتحسين الدورة الدموية", 
+                mood: "stress", 
+                duration: 180, 
+                icon: "fas fa-procedures",
+                steps: [
+                    "اجلس بجانب حائط مع جعل جانبك الأيمن ملاصقاً له",
+                    "استلقِ على ظهرك وارفع ساقيك على الحائط",
+                    "اجعل ذراعيك ممدودتين على الجانبين مع توجيه راحتي اليدين للأعلى",
+                    "تنفس بعمق واسترخِ تماماً",
+                    "ابقَ في هذه الوضعية لمدة 5-10 دقائق"
+                ],
+                benefits: [
+                    "تحسين الدورة الدموية في الساقين",
+                    "تخفيف التورم والإرهاق في القدمين",
+                    "تهدئة الجهاز العصبي",
+                    "تقليل التوتر والقلق"
+                ]
+            },
+
+            // تمارين للحزن والاكتئاب
+            { 
+                name: "وضعية الجسر", 
+                description: "تفتح الصدر والقلب وتنشط الدورة الدموية", 
+                mood: "sad", 
+                duration: 60, 
+                icon: "fas fa-archway",
+                steps: [
+                    "استلقي على ظهرك مع ثني ركبتيك ووضع قدميك على الأرض",
+                    "اجعل ذراعيك بجانب جسمك مع توجيه راحتي اليدين للأسفل",
+                    "ارفع وركيك نحو السقف مع الضغط على قدميك وذراعيك",
+                    "اشبك يديك تحت ظهرك وادفع صدرك نحو ذقنك",
+                    "احتفظ بالوضعية لمدة 30 ثانية إلى دقيقة واحدة"
+                ],
+                benefits: [
+                    "فتح منطقة الصدر والقلب",
+                    "تقوية عضلات الظهر والأرداف",
+                    "تحسين الدورة الدموية",
+                    "تعزيز الطاقة الإيجابية"
+                ]
+            },
+            { 
+                name: "وضعية المحارب", 
+                description: "تبني الثقة والقوة الداخلية", 
+                mood: "sad", 
+                duration: 60, 
+                icon: "fas fa-user-ninja",
+                steps: [
+                    "قف مع مباعدة قدميك بعرض الوركين",
+                    "تقدّم بقدمك اليمنى للأمام مع ثني الركبة بزاوية 90 درجة",
+                    "اجعل قدمك اليسرى خلفك مع توجيه أصابعها بزاوية 45 درجة",
+                    "ارفع ذراعيك للأعلى مع جعل راحتي اليدين متقابلتين",
+                    "انظر للأمام واشدّ بطنك للداخل",
+                    "احتفظ بالوضعية لمدة 30 ثانية ثم كرر على الجانب الآخر"
+                ],
+                benefits: [
+                    "بناء الثقة والقوة الداخلية",
+                    "تقوية الساقين والذراعين",
+                    "تحسين التوازن والتركيز",
+                    "تعزيز الشعور بالقدرة الشخصية"
+                ]
+            },
+            { 
+                name: "وضعية الشجرة", 
+                description: "تعزز التوازن والثقة بالنفس", 
+                mood: "sad", 
+                duration: 60, 
+                icon: "fas fa-tree",
+                steps: [
+                    "قف بشكل مستقيم مع جعل قدميك متلاصقتين",
+                    "انقل وزنك إلى قدمك اليسرى واثنِ ركبتك اليمنى",
+                    "ضع باطن قدمك اليمنى على فخذك اليسرى الداخلي",
+                    "اجمع راحتي يديك أمام صدرك أو ارفعهما فوق رأسك",
+                    "ركز نظرك على نقطة ثابتة أمامك للحفاظ على التوازن",
+                    "احتفظ بالوضعية لمدة 30 ثانية ثم كرر على الجانب الآخر"
+                ],
+                benefits: [
+                    "تحسين التوازن والتركيز",
+                    "تقوية الساقين والكاحلين",
+                    "تعزيز الثقة بالنفس",
+                    "تهدئة العقل وتقوية الإرادة"
+                ]
+            },
+            { 
+                name: "وضعية الانحناء الخلفي البسيط", 
+                description: "فتح الصدر وتحسين المزاج", 
+                mood: "sad", 
+                duration: 60, 
+                icon: "fas fa-angle-double-up",
+                steps: [
+                    "اجلس على ركبتيك مع جعل مؤخرتك على كعبيك",
+                    "ضع يديك خلفك على الأرض مع توجيه أصابعك للخلف",
+                    "ارفع صدرك للأعلى وانحني للخلف برفق",
+                    "تنفس بعمق واشعر بفتح منطقة الصدر",
+                    "احتفظ بالوضعية لمدة 30-60 ثانية"
+                ],
+                benefits: [
+                    "فتح منطقة الصدر والقلب",
+                    "تحسين التنفس",
+                    "تعزيز الطاقة الإيجابية",
+                    "تحسين المزاج والثقة"
+                ]
+            },
+            { 
+                name: "وضعية الجمل", 
+                description: "فتح الصدر والقلب بالكامل", 
+                mood: "sad", 
+                duration: 60, 
+                icon: "fas fa-horse",
+                steps: [
+                    "اجلس على ركبتيك مع المباعدة بينهما بعرض الوركين",
+                    "ضع يديك على مؤخرتك مع توجيه الأصابع للأسفل",
+                    "انحني للخلف ببطء وادفع الوركين للأمام",
+                    "أرخِ رأسك للخلف إذا كان ذلك مريحاً لعنقك",
+                    "احتفظ بالوضعية لمدة 30-60 ثانية"
+                ],
+                benefits: [
+                    "فتح الصدر والقلب بالكامل",
+                    "تحسين مرونة العمود الفقري",
+                    "تعزيز الثقة والشجاعة",
+                    "تحسين التنفس والقدرة الرئوية"
+                ]
+            },
+
+            // تمارين للإرهاق
+            { 
+                name: "وضعية الكلب المنظر للأسفل", 
+                description: "تنشط الجسم وتزيد تدفق الدم للدماغ", 
+                mood: "tired", 
+                duration: 90, 
+                icon: "fas fa-dog",
+                steps: [
+                    "ابدأ على يديك وركبتيك مع جعل يديك تحت كتفيك مباشرة",
+                    "ارفع وركيك للأعلى مشكلاً شكل مثلث مع الأرض",
+                    "حاول أن تمدّ رجليك قدر الإمكان مع إبقاء كعبيك على الأرض",
+                    "اجعل رأسك بين ذراعيك وتنفس بعمق",
+                    "احتفظ بالوضعية لمدة 1-3 دقائق"
+                ],
+                benefits: [
+                    "تنشيط الجسم بالكامل",
+                    "زيادة تدفق الدم إلى الدماغ",
+                    "تقوية الذراعين والساقين",
+                    "تحسين الهضم والتمثيل الغذائي"
+                ]
+            },
+            { 
+                name: "وضعية المحارب 3", 
+                description: "بناء القوة والتحمل", 
+                mood: "tired", 
+                duration: 60, 
+                icon: "fas fa-running",
+                steps: [
+                    "قف مع جعل قدميك متلاصقتين وذراعيك بجانب جسمك",
+                    "انقل وزنك إلى قدمك اليمنى وارفع قدمك اليسرى",
+                    "انحني جذعك للأمام مع رفع قدمك اليسرى للخلف",
+                    "اجعل جسمك على شكل حرف T مع الحفاظ على استقامة الظهر",
+                    "مدّ ذراعيك للأمام للحفاظ على التوازن",
+                    "احتفظ بالوضعية لمدة 30 ثانية ثم كرر على الجانب الآخر"
+                ],
+                benefits: [
+                    "بناء القوة والتحمل",
+                    "تحسين التوازن والتركيز",
+                    "تقوية الساقين والجذع",
+                    "زيادة الثقة بالنفس"
+                ]
+            },
+            { 
+                name: "وضعية الكرسي", 
+                description: "تقوية الساقين وزيادة الطاقة", 
+                mood: "tired", 
+                duration: 60, 
+                icon: "fas fa-chair",
+                steps: [
+                    "قف مع جعل قدميك متلاصقتين وذراعيك بجانب جسمك",
+                    "اثنِ ركبتيك كما لو أنك تجلس على كرسي خيالي",
+                    "ارفع ذراعيك للأعلى مع جعل راحتي اليدين متقابلتين",
+                    "احتفظ بظهرك مستقيماً وصدرك مرفوعاً",
+                    "تنفس بعمق وحافظ على الوضعية لمدة 30-60 ثانية"
+                ],
+                benefits: [
+                    "تقوية الساقين والأرداف",
+                    "زيادة الطاقة والتحمل",
+                    "تحسين التوازن والاستقرار",
+                    "تنشيط الدورة الدموية"
+                ]
+            },
+            { 
+                name: "وضعية اللوح", 
+                description: "تقوية الجسم بالكامل وزيادة الطاقة", 
+                mood: "tired", 
+                duration: 60, 
+                icon: "fas fa-border-style",
+                steps: [
+                    "ابدأ على يديك وركبتيك مع جعل يديك تحت كتفيك مباشرة",
+                    "ارفع ركبتيك ومدّ رجليك للخلف",
+                    "اجعل جسمك في خط مستقيم من رأسك إلى كعبيك",
+                    "اشدّ بطنك للداخل وتنفس بعمق",
+                    "احتفظ بالوضعية لمدة 30-60 ثانية"
+                ],
+                benefits: [
+                    "تقوية الجسم بالكامل",
+                    "تحسين القوة الأساسية",
+                    "زيادة الطاقة والتحمل",
+                    "تحسين وضعية الجسم"
+                ]
+            },
+            { 
+                name: "وضعية القارب", 
+                description: "تقوية البطن وزيادة الطاقة", 
+                mood: "tired", 
+                duration: 60, 
+                icon: "fas fa-ship",
+                steps: [
+                    "اجلس مع ثني ركبتيك ووضع قدميك على الأرض",
+                    "ارفع قدميك عن الأرض مع الحفاظ على استقامة الظهر",
+                    "مدّ ذراعيك للأمام موازية للأرض",
+                    "حافظ على التوازن على عظام الجلوس",
+                    "احتفظ بالوضعية لمدة 30-60 ثانية"
+                ],
+                benefits: [
+                    "تقوية عضلات البطن",
+                    "تحسين التوازن والتركيز",
+                    "زيادة الطاقة والتحمل",
+                    "تحسين الهضم"
+                ]
+            }
+        ];
+
+        // عناصر DOM
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const tipsScreen = document.getElementById('tips-screen');
+        const yogaScreen = document.getElementById('yoga-screen');
+        const completionScreen = document.getElementById('completion-screen');
+        
+        const startBtn = document.getElementById('start-btn');
+        
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const currentStep = document.getElementById('current-step');
+        const totalSteps = document.getElementById('total-steps');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const backToQuestionsBtn = document.getElementById('back-to-questions');
+        const toYogaBtn = document.getElementById('to-yoga-btn');
+        const backToTipsBtn = document.getElementById('back-to-tips');
+        const finishBtn = document.getElementById('finish-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        const tipsContainer = document.getElementById('tips-container');
+        
+        const prevPoseBtn = document.getElementById('prev-pose-btn');
+        const nextPoseBtn = document.getElementById('next-pose-btn');
+        const currentPoseElement = document.getElementById('current-pose');
+        const totalPosesElement = document.getElementById('total-poses');
+        
+        const poseImage = document.getElementById('pose-image');
+        const poseIcon = document.getElementById('pose-icon');
+        const poseImageText = document.getElementById('pose-image-text');
+        const poseName = document.getElementById('pose-name');
+        const poseDescription = document.getElementById('pose-description');
+        const poseSteps = document.getElementById('pose-steps');
+        const poseBenefits = document.getElementById('pose-benefits');
+        
+        const timerDisplay = document.getElementById('timer-display');
+        const startTimerBtn = document.getElementById('start-timer-btn');
+        const pauseTimerBtn = document.getElementById('pause-timer-btn');
+        const resetTimerBtn = document.getElementById('reset-timer-btn');
+        
+        const soundToggle = document.getElementById('sound-toggle');
+        const calmSound = document.getElementById('calm-sound');
+
+        // متغيرات التطبيق
+        let currentQuestionIndex = 0;
+        let userMood = '';
+        let userAnswers = [];
+        let currentPoseIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 0;
+        let isTimerRunning = false;
+        let selectedPoses = [];
+        let isSoundEnabled = false;
+
+        // تهيئة التطبيق
+        function initApp() {
+            // إضافة مستمعي الأحداث
+            startBtn.addEventListener('click', () => showScreen('question-screen'));
+            
+            prevBtn.addEventListener('click', goToPrevQuestion);
+            nextBtn.addEventListener('click', goToNextQuestion);
+            backToQuestionsBtn.addEventListener('click', () => showScreen('question-screen'));
+            toYogaBtn.addEventListener('click', () => {
+                showScreen('yoga-screen');
+                currentPoseIndex = 0;
+                selectRandomPoses();
+                showPose();
+            });
+            backToTipsBtn.addEventListener('click', () => showScreen('tips-screen'));
+            finishBtn.addEventListener('click', completeSession);
+            restartBtn.addEventListener('click', restartApp);
+            prevPoseBtn.addEventListener('click', goToPrevPose);
+            nextPoseBtn.addEventListener('click', goToNextPose);
+            
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+            
+            soundToggle.addEventListener('click', toggleSound);
+            
+            // ضبط مستوى الصوت
+            calmSound.volume = 0.3;
+            
+            console.log("تم تهيئة التطبيق بنجاح");
+        }
+
+        // اختيار تمارين عشوائية حسب الحالة النفسية
+        function selectRandomPoses() {
+            // تصفية التمارين المناسبة للحالة النفسية
+            const suitablePoses = yogaPosesDatabase.filter(pose => pose.mood === userMood);
+            
+            if (suitablePoses.length === 0) {
+                console.error("لا توجد تمارين مناسبة للحالة النفسية:", userMood);
+                return;
+            }
+            
+            // اختيار 3 تمارين عشوائية
+            const numberOfPoses = Math.min(3, suitablePoses.length);
+            
+            selectedPoses = [];
+            const usedIndices = new Set();
+            
+            while (selectedPoses.length < numberOfPoses && selectedPoses.length < suitablePoses.length) {
+                const randomIndex = Math.floor(Math.random() * suitablePoses.length);
+                if (!usedIndices.has(randomIndex)) {
+                    selectedPoses.push(suitablePoses[randomIndex]);
+                    usedIndices.add(randomIndex);
+                }
+            }
+            
+            // تحديث عدد التمارين الإجمالي
+            totalPosesElement.textContent = selectedPoses.length;
+            
+            console.log("تم اختيار التمارين:", selectedPoses.length);
+        }
+
+        // عرض السؤال الحالي
+        function showQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.text;
+            currentStep.textContent = currentQuestionIndex + 1;
+            totalSteps.textContent = questions.length;
+            
+            // تعطيل/تمكين أزرار التنقل
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = true;
+            
+            // تحديث شريط التقدم
+            updateProgressBar();
+            
+            // عرض الخيارات
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option.text;
+                button.dataset.value = option.value;
+                button.addEventListener('click', () => selectOption(option, index));
+                optionsContainer.appendChild(button);
+            });
+            
+            console.log("عرض السؤال:", currentQuestionIndex + 1);
+        }
+
+        // تحديد خيار
+        function selectOption(option, index) {
+            // إزالة التحديد من جميع الأزرار
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.style.backgroundColor = 'white';
+                btn.style.color = 'var(--primary)';
+            });
+            
+            // تحديد الزر المختار
+            document.querySelectorAll('.option-btn')[index].style.backgroundColor = 'var(--primary)';
+            document.querySelectorAll('.option-btn')[index].style.color = 'white';
+            
+            // حفظ الإجابة
+            userAnswers[currentQuestionIndex] = option.value;
+            
+            // إذا كان هذا هو السؤال الأول، احفظ الحالة النفسية
+            if (currentQuestionIndex === 0) {
+                userMood = option.value;
+                console.log("تم تحديد الحالة النفسية:", userMood);
+            }
+            
+            // تمكين زر التالي
+            nextBtn.disabled = false;
+        }
+
+        // الانتقال للسؤال التالي
+        function goToNextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                // انتهاء الأسئلة، انتقل لعرض النصائح
+                showTips();
+                showScreen('tips-screen');
+            }
+        }
+
+        // العودة للسؤال السابق
+        function goToPrevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+                
+                // إعادة تحديد الخيار السابق إن وجد
+                if (userAnswers[currentQuestionIndex]) {
+                    const options = document.querySelectorAll('.option-btn');
+                    options.forEach((option, index) => {
+                        if (option.dataset.value === userAnswers[currentQuestionIndex]) {
+                            option.style.backgroundColor = 'var(--primary)';
+                            option.style.color = 'white';
+                            nextBtn.disabled = false;
+                        }
+                    });
+                }
+            }
+        }
+
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // عرض النصائح
+        function showTips() {
+            tipsContainer.innerHTML = '';
+            
+            if (tipsData[userMood]) {
+                tipsData[userMood].forEach((tip, index) => {
+                    const tipCard = document.createElement('div');
+                    tipCard.className = 'tip-card';
+                    tipCard.innerHTML = `
+                        <h3>${index + 1}. ${tip.title}</h3>
+                        <p>${tip.description}</p>
+                    `;
+                    tipsContainer.appendChild(tipCard);
+                });
+            } else {
+                tipsContainer.innerHTML = '<p>لا توجد نصائح متاحة للحالة المختارة.</p>';
+            }
+            
+            console.log("عرض النصائح للحالة:", userMood);
+        }
+
+        // عرض تمرين اليوغا الحالي
+        function showPose() {
+            if (selectedPoses.length > 0 && currentPoseIndex < selectedPoses.length) {
+                const pose = selectedPoses[currentPoseIndex];
+                
+                // تحديث معلومات التمرين
+                poseName.textContent = pose.name;
+                poseDescription.textContent = pose.description;
+                
+                // تحديث أيقونة التمرين
+                poseIcon.className = pose.icon;
+                poseImageText.textContent = pose.name;
+                
+                // تحديث خطوات التمرين
+                poseSteps.innerHTML = '';
+                pose.steps.forEach((step, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = step;
+                    poseSteps.appendChild(li);
+                });
+                
+                // تحديث فوائد التمرين
+                poseBenefits.innerHTML = '';
+                if (pose.benefits) {
+                    pose.benefits.forEach(benefit => {
+                        const li = document.createElement('li');
+                        li.textContent = benefit;
+                        poseBenefits.appendChild(li);
+                    });
+                }
+                
+                // إعداد العد التنازلي
+                timeLeft = pose.duration;
+                updateTimerDisplay();
+                
+                // تحديث عداد التمارين
+                currentPoseElement.textContent = currentPoseIndex + 1;
+                totalPosesElement.textContent = selectedPoses.length;
+                
+                // تعطيل/تمكين أزرار التنقل بين التمارين
+                prevPoseBtn.disabled = currentPoseIndex === 0;
+                nextPoseBtn.disabled = currentPoseIndex === selectedPoses.length - 1;
+                
+                console.log("عرض التمرين:", currentPoseIndex + 1, pose.name);
+            } else {
+                yogaContainer.innerHTML = '<p>لا توجد تمارين يوغا متاحة للحالة المختارة.</p>';
+            }
+        }
+
+        // الانتقال للتمرين التالي
+        function goToNextPose() {
+            if (selectedPoses.length > 0 && currentPoseIndex < selectedPoses.length - 1) {
+                currentPoseIndex++;
+                resetTimer();
+                showPose();
+            }
+        }
+
+        // الانتقال للتمرين السابق
+        function goToPrevPose() {
+            if (currentPoseIndex > 0) {
+                currentPoseIndex--;
+                resetTimer();
+                showPose();
+            }
+        }
+
+        // إكمال الجلسة
+        function completeSession() {
+            calmSound.pause();
+            showScreen('completion-screen');
+            console.log("أكملت الجلسة بنجاح");
+        }
+
+        // بدء العد التنازلي
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                startTimerBtn.disabled = true;
+                pauseTimerBtn.disabled = false;
+                
+                // تشغيل الصوت الهادئ إذا كان مفعلاً
+                if (isSoundEnabled) {
+                    const playPromise = calmSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log("لم يتمكن المتصفح من تشغيل الصوت تلقائياً:", error);
+                        });
+                    }
+                }
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        startTimerBtn.disabled = false;
+                        pauseTimerBtn.disabled = true;
+                        
+                        // إيقاف الصوت الهادئ
+                        calmSound.pause();
+                        calmSound.currentTime = 0;
+                        
+                        // تشغيل صوت عند انتهاء الوقت (يمكن إضافة صوت فعلي هنا)
+                        if ('vibrate' in navigator) {
+                            navigator.vibrate(200);
+                        }
+                        
+                        alert('انتهى الوقت! أحسنت!');
+                    }
+                }, 1000);
+            }
+        }
+
+        // إيقاف العد التنازلي مؤقتاً
+        function pauseTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                startTimerBtn.disabled = false;
+                pauseTimerBtn.disabled = true;
+                
+                // إيقاف الصوت الهادئ مؤقتاً
+                calmSound.pause();
+            }
+        }
+
+        // إعادة تعيين العد التنازلي
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            if (selectedPoses.length > 0 && currentPoseIndex < selectedPoses.length) {
+                timeLeft = selectedPoses[currentPoseIndex].duration;
+            }
+            updateTimerDisplay();
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+            
+            // إيقاف الصوت الهادئ
+            calmSound.pause();
+            calmSound.currentTime = 0;
+        }
+
+        // تبديل تشغيل/إيقاف الصوت
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            if (isSoundEnabled) {
+                soundToggle.textContent = "إيقاف";
+                soundToggle.classList.add('active');
+                // إذا كان المؤقت يعمل، شغل الصوت
+                if (isTimerRunning) {
+                    const playPromise = calmSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log("لم يتمكن المتصفح من تشغيل الصوت:", error);
+                        });
+                    }
+                }
+            } else {
+                soundToggle.textContent = "تشغيل";
+                soundToggle.classList.remove('active');
+                calmSound.pause();
+            }
+        }
+
+        // تحديث عرض المؤقت
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+        }
+
+        // تنسيق الوقت (ثواني إلى دقائق:ثواني)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // عرض شاشة محددة
+        function showScreen(screenId) {
+            // إخفاء جميع الشاشات
+            welcomeScreen.classList.remove('active');
+            questionScreen.classList.remove('active');
+            tipsScreen.classList.remove('active');
+            yogaScreen.classList.remove('active');
+            completionScreen.classList.remove('active');
+            
+            // عرض الشاشة المطلوبة
+            document.getElementById(screenId).classList.add('active');
+            
+            // إذا كانت شاشة الأسئلة، فعرض السؤال الحالي
+            if (screenId === 'question-screen') {
+                showQuestion();
+            }
+            
+            console.log("تم الانتقال إلى الشاشة:", screenId);
+        }
+
+        // إعادة تشغيل التطبيق
+        function restartApp() {
+            currentQuestionIndex = 0;
+            userMood = '';
+            userAnswers = [];
+            currentPoseIndex = 0;
+            selectedPoses = [];
+            isSoundEnabled = false;
+            soundToggle.textContent = "تشغيل";
+            soundToggle.classList.remove('active');
+            calmSound.pause();
+            calmSound.currentTime = 0;
+            resetTimer();
+            showScreen('question-screen');
+            
+            console.log("إعادة تشغيل التطبيق");
+        }
+
+        // بدء التطبيق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
